@@ -44,7 +44,8 @@ counter = count(1)
 
 while True:
     print "Iteration %d" % counter.next()
-    ret, frame = video_capture.read()
+    ret, temp = video_capture.read()
+    frame = cv2.pyrDown(temp)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     for (x,y,w,h) in faces:
@@ -109,9 +110,7 @@ while True:
     #break
     #Display the resulting frame
     cv2.imshow('Video', frame)
-    cv2.waitKey()
-    cv2.imshow('Video', imgGlasses)
-    cv2.waitKey()
+
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
