@@ -51,7 +51,6 @@ while True:
     ret, temp = video_capture.read()
     frame = cv2.pyrDown(temp)
 
-
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
