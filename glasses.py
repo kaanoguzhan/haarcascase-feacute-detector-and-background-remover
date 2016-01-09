@@ -4,7 +4,7 @@ import cv2
 from itertools import count
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('frontalEyes.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascades/frontalEyes.xml')
 
 # Load the overlay image: glasses.png
 imgGlasses = cv2.imread('glasses.png', -1)
@@ -53,10 +53,7 @@ while True:
         roi_color = frame[y:y+h, x:x+w]
         eyes = eye_cascade.detectMultiScale(roi_gray)
 
-
-
-
-        #print 'X:%i, Y:%i, W:%i, H:%i' % (x, y, w, h)
+        # print 'X:%i, Y:%i, W:%i, H:%i' % (x, y, w, h)
         for (ex,ey,ew,eh) in eyes:
             cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
             print 'EX:%i, EY:%i, EW:%i, EH:%i' % (ex, ey, ew, eh)
@@ -71,7 +68,7 @@ while True:
             y1 = ey + (eh/2) - (glassesHeight/2)
             y2 = ey + eh + (glassesHeight/2)
 
-                # Check for clipping
+            # Check for clipping
             if x1 < 0:
                 x1 = 0
             if y1 < 0:
@@ -106,11 +103,9 @@ while True:
 
             # place the joined image, saved to dst back over the original image
             roi_color[y1:y2, x1:x2] = dst
-    #break
-    #Display the resulting frame
+    # break
+    # Display the resulting frame
     cv2.imshow('Video', frame)
-
-
 
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
