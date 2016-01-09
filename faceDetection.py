@@ -4,10 +4,10 @@ import cv2
 from itertools import count
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_nose.xml')
 
 # Load the overlay image: glasses.png
-imgGlasses = cv2.imread('mustache.png', -1 )
+imgGlasses = cv2.imread('mustache.png', -1)
 
 #Check if the files opened
 if  imgGlasses is None :
