@@ -22,7 +22,7 @@ if  eye_cascade.empty() :
 imgGlassesGray = cv2.cvtColor(imgGlasses, cv2.COLOR_BGR2GRAY)
 ret, orig_mask = cv2.threshold(imgGlassesGray, 10, 255, cv2.THRESH_BINARY)
 
-orig_mask = imgGlasses[:,:,3]
+orig_mask = imgGlasses[:,:,2]
 
 # Create the inverted mask for the glasses
 orig_mask_inv = cv2.bitwise_not(orig_mask)
@@ -47,12 +47,17 @@ while True:
     ret, frame = video_capture.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+
+
     for (x,y,w,h) in faces:
         cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = frame[y:y+h, x:x+w]
         eyes = eye_cascade.detectMultiScale(roi_gray)
 
+        if eyes != None:
+            break
 
 
 
