@@ -4,10 +4,10 @@ import cv2
 from itertools import count
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_nose.xml')
 
 # Load the overlay image: glasses.png
-imgGlasses = cv2.imread('sunglasses.png', -1 )
+imgGlasses = cv2.imread('mustache.png', -1)
 
 #Check if the files opened
 if  imgGlasses is None :
@@ -44,8 +44,7 @@ counter = count(1)
 
 while True:
     print "Iteration %d" % counter.next()
-    ret, temp = video_capture.read()
-    frame = cv2.pyrDown(temp)
+    ret, frame = video_capture.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     for (x,y,w,h) in faces:
@@ -110,6 +109,8 @@ while True:
     #break
     #Display the resulting frame
     cv2.imshow('Video', frame)
+
+
 
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
