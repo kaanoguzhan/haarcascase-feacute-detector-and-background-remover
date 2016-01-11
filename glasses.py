@@ -8,7 +8,7 @@ if face_cascade.empty():
 eye_cascade = cv2.CascadeClassifier('haarcascades/frontalEyes.xml')
 if eye_cascade.empty():
     exit("Missing: haarcascade_eye.xml")
-imgGlasses = cv2.imread('glasses.png', -1)
+imgGlasses = cv2.imread('rayban.png', -1)
 if imgGlasses is None:
     exit("Could not open the image")
 
@@ -63,10 +63,10 @@ def _putglass_(frame):
             glassesHeight = glassesWidth * origGlassesHeight / origGlassesWidth
 
             # Center the glasses on the bottom of the nose
-            x1 = ex - (glassesWidth / 4)
-            x2 = ex + ew + (glassesWidth / 4)
-            y1 = ey + (eh / 2) - (glassesHeight / 2)
-            y2 = ey + eh + (glassesHeight / 2)
+            x1 = ex - (glassesWidth / 6)
+            x2 = ex + ew + (glassesWidth / 6)
+            y1 = ey + (45*eh/100) - (glassesHeight / 2)
+            y2 = ey + 65*eh/100 + (glassesHeight / 2)
 
             # Check for clipping
             if x1 < 0:
@@ -88,7 +88,8 @@ def _putglass_(frame):
 
             # Re-size the original image and the masks to the glasses sizes
             # calcualted above
-            glasses = cv2.resize(imgGlasses, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
+            imgGlasses2 = cv2.GaussianBlur(imgGlasses, (9 ,9),0)
+            glasses = cv2.resize(imgGlasses2, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
             mask = cv2.resize(orig_mask, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
             mask_inv = cv2.resize(orig_mask_inv, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
 

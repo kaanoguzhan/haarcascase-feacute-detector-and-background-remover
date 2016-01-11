@@ -17,7 +17,6 @@ while True:
 
     ret, temp = video_capture.read()
     frame = pyrDown(temp)
-
     frame2 = _putmoustache_(frame)
     frame3 = _putglass_(frame2)
 

@@ -3,14 +3,14 @@
 import cv2
 from itertools import count
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('haarcascade_nose.xml')
+face_cascade = cv2.CascadeClassifier('haarcascade_upperbody.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
 noseHeight = 65
 noseWidth = 55
 
 # Load the overlay image: glasses.png
-imgGlasses = cv2.imread('mustache.png', -1)
+imgGlasses = cv2.imread('mustache_final.png', -1)
 
 # Check if the files opened
 if imgGlasses is None:
@@ -46,7 +46,7 @@ def _putmoustache_(frame):
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     for (x, y, w, h) in faces:
-        #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
         roi_gray = gray[y:y + h, x:x + w]
         roi_color = frame[y:y + h, x:x + w]
         eyes = eye_cascade.detectMultiScale(roi_gray)
@@ -67,24 +67,24 @@ def _putmoustache_(frame):
                     print "No Nose"
 
         if drawNose:
-            #print 'X:%i, Y:%i, W:%i, H:%i' % (ex, ey, ew, eh)
+            print 'X:%i, Y:%i, W:%i, H:%i' % (ex, ey, ew, eh)
             ex = eyetemp[0]
             ey = eyetemp[1]
             ew = eyetemp[2]
             eh = eyetemp[3]
             print eyetemp[0]
 
-            #cv2.rectangle(roi_color, (ex+(ew/5), ey-(eh/5)), (ex + ew, ey + (eh*2/3)), (0, 255, 0), 2)
+            cv2.rectangle(roi_color, (ex+(ew/5), ey-(eh/5)), (ex + ew, ey + (eh*2/3)), (0, 255, 0), 2)
             print 'EX:%i, EY:%i, EW:%i, EH:%i' % (ex, ey, ew, eh)
 
             glassesWidth = 3 * ew
             glassesHeight = glassesWidth * origGlassesHeight / origGlassesWidth
 
             # Center the glasses on the bottom of the nose
-            x1 = ex - (glassesWidth / 4)
+            x1 = ex - (glassesWidth / 6)
             x2 = ex + ew + (glassesWidth / 4)
-            y1 = ey + eh - (glassesHeight / 2)
-            y2 = ey + eh + (glassesHeight / 2)
+            y1 = ey + 9*eh/10 - (glassesHeight / 2)
+            y2 = ey + 70*eh/100 + (glassesHeight / 2)
 
             # Check for clipping
             if x1 < 0:
@@ -107,7 +107,9 @@ def _putmoustache_(frame):
 
             # Re-size the original image and the masks to the glasses sizes
             # calcualted above
-            glasses = cv2.resize(imgGlasses, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
+
+            imgGlasses2 = cv2.GaussianBlur(imgGlasses, (9 ,9),0)
+            glasses = cv2.resize(imgGlasses2, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
             mask = cv2.resize(orig_mask, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
             mask_inv = cv2.resize(orig_mask_inv, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
 
@@ -126,6 +128,8 @@ def _putmoustache_(frame):
 
             # place the joined image, saved to dst back over the original image
             roi_color[y1:y2, x1:x2] = dst
+
+
 
     # break
     # Display the resulting frame
