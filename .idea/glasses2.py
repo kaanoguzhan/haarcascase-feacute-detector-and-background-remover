@@ -110,8 +110,11 @@ while True:
     #Display the resulting frame
     cv2.imshow('Video', frame)
 
+<<<<<<< HEAD:.idea/glasses2.py
 
 
+=======
+>>>>>>> 25d8c1c12cd9381fb3dff71fcd451797eb87ec48:faceDetection.py
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
