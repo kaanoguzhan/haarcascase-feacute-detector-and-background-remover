@@ -1,7 +1,8 @@
 #! /usr/bin/python
 
-from cv2 import VideoCapture,imshow,destroyAllWindows,waitKey
-from glasses import _putGlass_
+from cv2 import VideoCapture,imshow,destroyAllWindows,waitKey,pyrDown
+from glasses import _putglass_
+from moustache import _putmoustache_
 from itertools import count
 
 video_capture = VideoCapture(0)
@@ -14,10 +15,14 @@ counter = count(1)
 while True:
     print "Iteration %d" % counter.next()
 
-    frame = _putGlass_(video_capture)
+    ret, temp = video_capture.read()
+    frame = pyrDown(temp)
+
+    frame2 = _putmoustache_(frame)
+    frame3 = _putglass_(frame2)
 
     # Display the resulting frame
-    imshow("Video", frame)
+    imshow("Video", frame3)
     waitKey(5)
 
 # When everything is done, release the capture

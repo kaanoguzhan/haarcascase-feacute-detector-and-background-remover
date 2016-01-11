@@ -34,34 +34,25 @@ orig_mask_inv = cv2.bitwise_not(orig_mask)
 imgGlasses = imgGlasses[:, :, 0:3]
 origGlassesHeight, origGlassesWidth = imgGlasses.shape[:2]
 
-cv2.imshow('Video', imgGlasses)
-
-video_capture = cv2.VideoCapture(0)
-
-if not video_capture.isOpened():
-    exit('The Camera is not opened')
 
 counter = count(1)
 
 eyetemp = [10, 10, 10, 10]
 
-while True:
-    print "Iteration %d" % counter.next()
+def _putmoustache_(frame):
 
-    ret, temp = video_capture.read()
-    frame = cv2.pyrDown(temp)
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
         roi_gray = gray[y:y + h, x:x + w]
         roi_color = frame[y:y + h, x:x + w]
         eyes = eye_cascade.detectMultiScale(roi_gray)
-
+        drawNose = False
         for (ex, ey, ew, eh) in eyes:
-            drawNose = False
+
             eyetemp = [40, 40, 40, 40]
             if ew > eyetemp[2] or eh > eyetemp[3]:
                 print 'ey:%i, y:%i, h:%i' % (ey, y, h,)
@@ -83,7 +74,7 @@ while True:
             eh = eyetemp[3]
             print eyetemp[0]
 
-            cv2.rectangle(roi_color, (ex+(ew/5), ey-(eh/5)), (ex + ew, ey + (eh*2/3)), (0, 255, 0), 2)
+            #cv2.rectangle(roi_color, (ex+(ew/5), ey-(eh/5)), (ex + ew, ey + (eh*2/3)), (0, 255, 0), 2)
             print 'EX:%i, EY:%i, EW:%i, EH:%i' % (ex, ey, ew, eh)
 
             glassesWidth = 3 * ew
@@ -138,11 +129,6 @@ while True:
 
     # break
     # Display the resulting frame
-    cv2.imshow('Video', frame)
+    return frame
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
 
-# When everything is done, release the capture
-video_capture.release()
-cv2.destroyAllWindows()
