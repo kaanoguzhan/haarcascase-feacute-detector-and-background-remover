@@ -1,7 +1,6 @@
 #! /usr/bin/python
 
 import cv2
-from itertools import count
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 if face_cascade.empty():
@@ -18,16 +17,14 @@ imgGlassesGray = cv2.cvtColor(imgGlasses, cv2.COLOR_BGR2GRAY)
 ret, orig_mask = cv2.threshold(imgGlassesGray, 10, 255, cv2.THRESH_BINARY)
 
 orig_mask = imgGlasses[:, :, 3]
-
 imgGlasses = imgGlasses[:, :, 0:3]
 origGlassesHeight, origGlassesWidth = imgGlasses.shape[:2]
-
 
 # Create the inverted mask for the glasses
 orig_mask_inv = cv2.bitwise_not(orig_mask)
 
 
-def _test_(video_capture):
+def _putGlass_(video_capture):
     ret, temp = video_capture.read()
     frame = cv2.pyrDown(temp)
 

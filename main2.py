@@ -1,10 +1,10 @@
 #! /usr/bin/python
 
-from cv2 import VideoCapture,imshow,destroyAllWindows,waitKey
-from glasses import _putGlass_
+import cv2
+from glasses import __test__
 from itertools import count
 
-video_capture = VideoCapture(0)
+video_capture = cv2.VideoCapture(0)
 
 if not video_capture.isOpened():
     exit('The Camera is not opened')
@@ -14,14 +14,12 @@ counter = count(1)
 while True:
     print "Iteration %d" % counter.next()
 
-    frame = _putGlass_(video_capture)
+    frame = __test__(video_capture)
 
     # Display the resulting frame
-    imshow("Video", frame)
-    waitKey(5)
+    cv2.imshow('Video', frame)
+
 
 # When everything is done, release the capture
 video_capture.release()
-destroyAllWindows()
-
-
+cv2.destroyAllWindows()
