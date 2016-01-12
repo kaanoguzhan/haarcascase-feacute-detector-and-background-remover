@@ -37,8 +37,6 @@ origGlassesHeight, origGlassesWidth = imgGlasses.shape[:2]
 
 counter = count(1)
 
-eyetemp = [10, 10, 10, 10]
-
 def _putmoustache_(frame):
 
 
@@ -53,40 +51,37 @@ def _putmoustache_(frame):
         drawNose = False
         for (ex, ey, ew, eh) in eyes:
 
-            eyetemp = [40, 40, 40, 40]
+            eyetemp = [10, 10, 10, 10]
             if ew > eyetemp[2] or eh > eyetemp[3]:
-                print 'ey:%i, y:%i, h:%i' % (ey, y, h,)
-                if ey > (h*3/8):
+                #print 'ey:%i, y:%i, h:%i' % (ey, y, h,)
+                if ey > (h*25/100):
                     drawNose = True
                     eyetemp[0] = ex
                     eyetemp[1] = ey
                     eyetemp[2] = ew
                     eyetemp[3] = eh
                     print "Nose Found"
-                else:
-                    print "No Nose"
+
+            if eyetemp[0] == 10 or eyetemp[1] == 10 or eyetemp[2] == 10:
+                drawNose = False
 
         if drawNose:
-            print 'X:%i, Y:%i, W:%i, H:%i' % (ex, ey, ew, eh)
+            #print 'X:%i, Y:%i, W:%i, H:%i' % (ex, ey, ew, eh)
             ex = eyetemp[0]
             ey = eyetemp[1]
             ew = eyetemp[2]
             eh = eyetemp[3]
-            print eyetemp[0]
 
-            #cv2.rectangle(roi_color, (ex+(ew/5), ey-(eh/5)), (ex + ew, ey + (eh*2/3)), (0, 255, 0), 2)
-            print 'EX:%i, EY:%i, EW:%i, EH:%i' % (ex, ey, ew, eh)
+            ##cv2.rectangle(roi_color, (ex+(ew/5), ey-(eh/5)), (ex + ew, ey + (eh*2/3)), (0, 255, 0), 2)
 
             glassesWidth = 3 * ew
             glassesHeight = glassesWidth * origGlassesHeight / origGlassesWidth
 
-            # Center the glasses on the bottom of the nose
             x1 = ex - (glassesWidth / 6)
             x2 = ex + ew + (glassesWidth / 4)
             y1 = ey + 9*eh/10 - (glassesHeight / 2)
             y2 = ey + 70*eh/100 + (glassesHeight / 2)
 
-            # Check for clipping
             if x1 < 0:
                 x1 = 0
             if y1 < 0:
@@ -96,7 +91,6 @@ def _putmoustache_(frame):
             if y2 > h:
                 y2 = h
 
-            # Re-calculate the width and height of the glasses image
             glassesWidth = x2 - x1
             glassesHeight = y2 - y1
             if glassesWidth < 0:
@@ -104,33 +98,20 @@ def _putmoustache_(frame):
             if glassesHeight < 0:
                 glassesHeight = 0
 
-
-            # Re-size the original image and the masks to the glasses sizes
-            # calcualted above
-
             imgGlasses2 = cv2.GaussianBlur(imgGlasses, (9 ,9),0)
             glasses = cv2.resize(imgGlasses2, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
             mask = cv2.resize(orig_mask, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
             mask_inv = cv2.resize(orig_mask_inv, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
 
-            # take ROI for glasses from background equal to size of glasses image
             roi = roi_color[y1:y2, x1:x2]
 
-            # roi_bg contains the original image only where the glasses is not
-            # in the region that is the size of the glasses.
             roi_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
 
-            # roi_fg contains the image of the glasses only where the glasses is
             roi_fg = cv2.bitwise_and(glasses, glasses, mask=mask)
 
-            # join the roi_bg and roi_fg
             dst = cv2.add(roi_bg, roi_fg)
 
-            # place the joined image, saved to dst back over the original image
             roi_color[y1:y2, x1:x2] = dst
-
-
-
     # break
     # Display the resulting frame
     return frame

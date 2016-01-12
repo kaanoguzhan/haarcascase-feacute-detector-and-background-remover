@@ -40,7 +40,7 @@ def _putglass_(frame):
         for (ex, ey, ew, eh) in eyes:
             eyetemp = [40, 40, 40, 40]
             if ew > eyetemp[2] or eh > eyetemp[3]:
-                print 'ey:%i, y:%i, h:%i' % (ey, y, h,)
+                #print 'ey:%i, y:%i, h:%i' % (ey, y, h,)
                 drawNose = True
                 eyetemp[0] = ex
                 eyetemp[1] = ey
@@ -54,21 +54,19 @@ def _putglass_(frame):
             ey = eyetemp[1]
             ew = eyetemp[2]
             eh = eyetemp[3]
-            print eyetemp[0]
 
             #cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
-            print 'EX:%i, EY:%i, EW:%i, EH:%i' % (ex, ey, ew, eh)
+            #print 'EX:%i, EY:%i, EW:%i, EH:%i' % (ex, ey, ew, eh)
 
             glassesWidth = ew
             glassesHeight = glassesWidth * origGlassesHeight / origGlassesWidth
 
-            # Center the glasses on the bottom of the nose
+
             x1 = ex - (glassesWidth / 6)
             x2 = ex + ew + (glassesWidth / 6)
             y1 = ey + (45*eh/100) - (glassesHeight / 2)
             y2 = ey + 65*eh/100 + (glassesHeight / 2)
 
-            # Check for clipping
             if x1 < 0:
                 x1 = 0
             if y1 < 0:
@@ -78,7 +76,6 @@ def _putglass_(frame):
             if y2 > h:
                 y2 = h
 
-            # Re-calculate the width and height of the glasses image
             glassesWidth = x2 - x1
             glassesHeight = y2 - y1
             if glassesWidth < 0:
@@ -86,27 +83,24 @@ def _putglass_(frame):
             if glassesHeight < 0:
                 glassesHeight = 0
 
-            # Re-size the original image and the masks to the glasses sizes
-            # calcualted above
             imgGlasses2 = cv2.GaussianBlur(imgGlasses, (9 ,9),0)
             glasses = cv2.resize(imgGlasses2, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
             mask = cv2.resize(orig_mask, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
             mask_inv = cv2.resize(orig_mask_inv, (glassesWidth, glassesHeight), interpolation=cv2.INTER_AREA)
 
-            # take ROI for glasses from background equal to size of glasses image
+            # take region of interest from the image
             roi = roi_color[y1:y2, x1:x2]
 
-            # roi_bg contains the original image only where the glasses is not
-            # in the region that is the size of the glasses.
+            # where the glasses are not in the image
             roi_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
 
-            # roi_fg contains the image of the glasses only where the glasses is
+            # only glasses
             roi_fg = cv2.bitwise_and(glasses, glasses, mask=mask)
 
-            # join the roi_bg and roi_fg
+            # joined together
             dst = cv2.add(roi_bg, roi_fg)
 
-            # place the joined image, saved to dst back over the original image
+            # place the original image to the region of interest
             roi_color[y1:y2, x1:x2] = dst
 
 

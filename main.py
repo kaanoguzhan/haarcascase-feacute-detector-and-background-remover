@@ -5,7 +5,7 @@ from glasses import _putglass_
 from moustache import _putmoustache_
 from itertools import count
 
-backgroundTreshold = 20
+backgroundTreshold = 35
 
 beach = imread('manzara640.png', -1)
 
@@ -30,12 +30,13 @@ while True:
     print "Iteration %d" % counter.next()
 
     ret, temp = video_capture.read()
-    temp = pyrDown(temp)
+    #temp = pyrDown(temp)
     frame2 = _putmoustache_(temp)
     frame3 = _putglass_(frame2)
 
+    frame3 = pyrDown(frame3)
     #frame3 = pyrDown(frame3)
-    #Display the resulting frame
+
     height, width = frame3.shape[:2]
     for i in range(1, height, 4):
         for j in range(1, width, 4):
@@ -48,12 +49,11 @@ while True:
                                 frame3[i+x][j+y][1] = beach[i+x][j+y][1]
                                 frame3[i+x][j+y][2] = beach[i+x][j+y][2]
 
-    #frame3 = pyrUp(frame3)
+   #frame3 = pyrUp(frame3)
     frame3 = pyrUp(frame3)
     imshow("Video", frame3)
-    waitKey(250)
+    waitKey(100)
 
-# When everything is done, release the capture
 video_capture.release()
 destroyAllWindows()
 
