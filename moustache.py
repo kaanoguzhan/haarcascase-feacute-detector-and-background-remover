@@ -3,8 +3,8 @@
 import cv2
 from itertools import count
 
-face_cascade = cv2.CascadeClassifier('haarcascade_upperbody.xml')
-eye_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_nose.xml')
 
 noseHeight = 65
 noseWidth = 55
@@ -46,7 +46,7 @@ def _putmoustache_(frame):
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
         roi_gray = gray[y:y + h, x:x + w]
         roi_color = frame[y:y + h, x:x + w]
         eyes = eye_cascade.detectMultiScale(roi_gray)
@@ -74,7 +74,7 @@ def _putmoustache_(frame):
             eh = eyetemp[3]
             print eyetemp[0]
 
-            cv2.rectangle(roi_color, (ex+(ew/5), ey-(eh/5)), (ex + ew, ey + (eh*2/3)), (0, 255, 0), 2)
+            #cv2.rectangle(roi_color, (ex+(ew/5), ey-(eh/5)), (ex + ew, ey + (eh*2/3)), (0, 255, 0), 2)
             print 'EX:%i, EY:%i, EW:%i, EH:%i' % (ex, ey, ew, eh)
 
             glassesWidth = 3 * ew
