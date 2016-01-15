@@ -3,14 +3,23 @@
 import cv2
 from itertools import count
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('haarcascade_nose.xml')
+#Read Haarcascades
+face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
+if face_cascade.empty():
+    exit("! Missing: haarcascade_frontalface_default.xml !\nYou need to run the main.py from the project directory")
+eye_cascade = cv2.CascadeClassifier('haarcascades/haarcascades/frontalEyes.xml')
+if eye_cascade.empty():
+    exit("! Missing: haarcascade_eye.xml !\nYou need to run the main.py from the project directory")
+
+#Read Image
+imgGlasses = cv2.imread('images/moustache.png', -1)
+if imgGlasses is None:
+    exit("Could not open the image")
 
 noseHeight = 65
 noseWidth = 55
 
-# Load the overlay image: glasses.png
-imgGlasses = cv2.imread('mustache_final.png', -1)
+
 
 # Check if the files opened
 if imgGlasses is None:
@@ -60,7 +69,7 @@ def _putmoustache_(frame):
                     eyetemp[1] = ey
                     eyetemp[2] = ew
                     eyetemp[3] = eh
-                    print "Nose Found"
+                    print("Nose Found")
 
             if eyetemp[0] == 10 or eyetemp[1] == 10 or eyetemp[2] == 10:
                 drawNose = False
@@ -77,10 +86,10 @@ def _putmoustache_(frame):
             glassesWidth = 3 * ew
             glassesHeight = glassesWidth * origGlassesHeight / origGlassesWidth
 
-            x1 = ex - (glassesWidth / 6)
-            x2 = ex + ew + (glassesWidth / 4)
-            y1 = ey + 9*eh/10 - (glassesHeight / 2)
-            y2 = ey + 70*eh/100 + (glassesHeight / 2)
+            x1 = int(ex - (glassesWidth / 6))
+            x2 = int(ex + ew + (glassesWidth / 4))
+            y1 = int(ey + 9*eh/10 - (glassesHeight / 2))
+            y2 = int(ey + 70*eh/100 + (glassesHeight / 2))
 
             if x1 < 0:
                 x1 = 0

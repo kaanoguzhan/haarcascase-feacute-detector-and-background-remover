@@ -1,14 +1,18 @@
 #! /usr/bin/python
 
 import cv2
+import os
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+#Read Haarcascades
+face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
 if face_cascade.empty():
-    exit("Missing: haarcascade_frontalface_default.xml")
-eye_cascade = cv2.CascadeClassifier('haarcascades/frontalEyes.xml')
+    exit("! Missing: haarcascade_frontalface_default.xml !\nYou need to run the main.py from the project directory")
+eye_cascade = cv2.CascadeClassifier('haarcascades/haarcascades/frontalEyes.xml')
 if eye_cascade.empty():
-    exit("Missing: haarcascade_eye.xml")
-imgGlasses = cv2.imread('rayban.png', -1)
+    exit("! Missing: haarcascade_eye.xml !\nYou need to run the main.py from the project directory")
+
+#Read Image
+imgGlasses = cv2.imread('images/glass.png', -1)
 if imgGlasses is None:
     exit("Could not open the image")
 
@@ -25,9 +29,7 @@ orig_mask_inv = cv2.bitwise_not(orig_mask)
 
 
 def _putglass_(frame):
-
-
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     for (x, y, w, h) in faces:
@@ -40,13 +42,13 @@ def _putglass_(frame):
         for (ex, ey, ew, eh) in eyes:
             eyetemp = [40, 40, 40, 40]
             if ew > eyetemp[2] or eh > eyetemp[3]:
-                print 'ey:%i, y:%i, h:%i' % (ey, y, h,)
+                print('ey:%i, y:%i, h:%i' % (ey, y, h,))
                 drawNose = True
                 eyetemp[0] = ex
                 eyetemp[1] = ey
                 eyetemp[2] = ew
                 eyetemp[3] = eh
-                print "Nose Found"
+                print("Nose Found")
 
         if drawNose:
             # print 'X:%i, Y:%i, W:%i, H:%i' % (x, y, w, h)
@@ -62,10 +64,10 @@ def _putglass_(frame):
             glassesHeight = glassesWidth * origGlassesHeight / origGlassesWidth
 
 
-            x1 = ex - (glassesWidth / 6)
-            x2 = ex + ew + (glassesWidth / 6)
-            y1 = ey + (45*eh/100) - (glassesHeight / 2)
-            y2 = ey + 65*eh/100 + (glassesHeight / 2)
+            x1 = int(ex - (glassesWidth / 6))
+            x2 = int(ex + ew + (glassesWidth / 6))
+            y1 = int(ey + (45*eh/100) - (glassesHeight / 2))
+            y2 = int(ey + 65*eh/100 + (glassesHeight / 2))
 
             if x1 < 0:
                 x1 = 0
