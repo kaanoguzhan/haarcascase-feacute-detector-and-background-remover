@@ -40,7 +40,7 @@ def _putglass_(frame):
         for (ex, ey, ew, eh) in eyes:
             eyetemp = [40, 40, 40, 40]
             if ew > eyetemp[2] or eh > eyetemp[3]:
-                #print 'ey:%i, y:%i, h:%i' % (ey, y, h,)
+                print 'ey:%i, y:%i, h:%i' % (ey, y, h,)
                 drawNose = True
                 eyetemp[0] = ex
                 eyetemp[1] = ey
